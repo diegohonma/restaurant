@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Restaurant.Ioc;
+using Swashbuckle.AspNetCore.Swagger;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Restaurant.Api
@@ -23,6 +24,16 @@ namespace Restaurant.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSwaggerGen(options =>
+            {
+                options.DescribeAllEnumsAsStrings();
+                options.SwaggerDoc("v1", new Info
+                {
+                    Title = "Restaurant",
+                    Version = "v1"
+                });
+            });
+
             services.AddMvc();
             services.RegisterDependencies(Configuration);
         }
@@ -33,6 +44,9 @@ namespace Restaurant.Api
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseSwagger()
+                .UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Restaurant"); });
 
             app.UseMvc();
         }

@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Restaurant.Application.Handlers.Products;
+using Restaurant.Application.Responses;
+using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace Restaurant.Api.Controllers
@@ -16,6 +19,8 @@ namespace Restaurant.Api.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(typeof(void), (int)HttpStatusCode.NoContent)]
+        [ProducesResponseType(typeof(List<GetProductsViewModel>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetAll()
         {
             var products = await _getProductsHandler.GetAll();
