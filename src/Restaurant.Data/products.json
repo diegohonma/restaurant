@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "description": "Lanche 1",
+    "cookTime": "30",
+    "type": 1
+  },
+  {
+    "id": 2,
+    "description": "Fritas",
+    "cookTime": "20",
+    "type": 3
+  },
+  {
+    "id": 3,
+    "description": "Suco",
+    "cookTime": "10",
+    "type": 2
+  },
+  {
+    "id": 4,
+    "description": "Lanche 2",
+    "cookTime": "30",
+    "type": 1
+  },
+  {
+    "id": 5,
+    "description": "Lanche 3",
+    "cookTime": "30",
+    "type": 1
+  }
+]
