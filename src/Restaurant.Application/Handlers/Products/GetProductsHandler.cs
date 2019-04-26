@@ -1,5 +1,5 @@
 ﻿using Restaurant.Application.Responses;
-using Restaurant.Domain.Interfaces;
+using Restaurant.Domain.Interfaces.Repositories;
 using System.Linq;
 using System.Threading.Tasks;
 

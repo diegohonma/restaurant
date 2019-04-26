@@ -3,7 +3,7 @@ using NUnit.Framework;
 using Restaurant.Application.Handlers.Products;
 using Restaurant.Domain.Entities;
 using Restaurant.Domain.Enums;
-using Restaurant.Domain.Interfaces;
+using Restaurant.Domain.Interfaces.Repositories;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
