@@ -25,6 +25,7 @@ namespace Restaurant.Ioc
         {
             services.AddScoped<IGetProductsHandler, GetProductsHandler>();
             services.AddScoped<ICreateOrderHandler, CreateOrderHandler>();
+            services.AddScoped<IGetOrderHandler, GetOrderHandler>();
         }
 
         private static void RegisterRepositories(IServiceCollection services, IConfiguration configuration)

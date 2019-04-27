@@ -1,6 +1,8 @@
 ﻿using Restaurant.Domain.Entities;
 using Restaurant.Domain.Interfaces.Repositories;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Restaurant.Data.Repositories
 {
@@ -14,5 +16,7 @@ namespace Restaurant.Data.Repositories
         }
 
         public void Add(Order order) => _listOrder.Add(order);
+
+        public Order GetById(Guid id) => _listOrder.FirstOrDefault(o => o.OrderId == id);
     }
 }
