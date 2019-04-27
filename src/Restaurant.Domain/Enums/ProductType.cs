@@ -5,6 +5,7 @@
         None,
         Burger,
         Drink,
+        DrinkFree,
         Others
     }
 }

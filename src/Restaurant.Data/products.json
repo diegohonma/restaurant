@@ -9,13 +9,13 @@
     "id": 2,
     "description": "Fritas",
     "cookTime": "20",
-    "type": 3
+    "type": 4
   },
   {
     "id": 3,
     "description": "Suco",
     "cookTime": "10",
-    "type": 2
+    "type": 3
   },
   {
     "id": 4,
@@ -28,5 +28,11 @@
     "description": "Lanche 3",
     "cookTime": "30",
     "type": 1
+  },
+  {
+    "id": 6,
+    "description": "Coca-cola",
+    "cookTime": "5",
+    "type": 2
   }
 ]

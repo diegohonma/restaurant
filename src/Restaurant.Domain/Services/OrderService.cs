@@ -1,10 +1,12 @@
 ﻿using Restaurant.Domain.Entities;
+using Restaurant.Domain.Enums;
 using Restaurant.Domain.Interfaces.Repositories;
+using Restaurant.Domain.Interfaces.Services;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Restaurant.Domain.Interfaces.Services
+namespace Restaurant.Domain.Services
 {
     public class OrderService : IOrderService
     {
@@ -27,6 +29,12 @@ namespace Restaurant.Domain.Interfaces.Services
 
             products.ToList()
                 .ForEach(p => newOrder.AddNewProduct(p.Id, p.Description, p.CookTime, p.Type));
+
+            if (newOrder.Products.Count(p => p.Type == ProductType.Burger) >= 2)
+            {
+                var freeDrink = (await _productsRepository.GetByType(ProductType.DrinkFree)).First();
+                newOrder.AddNewProduct(freeDrink.Id, freeDrink.Description, freeDrink.CookTime, freeDrink.Type);
+            }
 
             _orderRepository.Add(newOrder);
 

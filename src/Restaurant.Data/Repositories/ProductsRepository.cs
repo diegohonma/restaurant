@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Restaurant.Domain.Entities;
+using Restaurant.Domain.Enums;
 using Restaurant.Domain.Interfaces.Repositories;
 using System.Collections.Generic;
 using System.IO;
@@ -26,6 +27,10 @@ namespace Restaurant.Data.Repositories
             }
         }
 
-        public async Task<Product> GetById(int id) => (await GetAll()).FirstOrDefault(p => p.Id == id);
+        public async Task<Product> GetById(int id)
+            => (await GetAll()).FirstOrDefault(p => p.Id == id);
+
+        public async Task<List<Product>> GetByType(ProductType productType) =>
+            (await GetAll()).Where(p => p.Type == productType).ToList();
     }
 }
