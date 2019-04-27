@@ -21,23 +21,23 @@ namespace Restaurant.Tests.Application.Handlers.Orders
         }
 
         [Test]
-        public async Task ReturnFalse_When_NotCreated()
+        public async Task ReturnNull_When_NotCreated()
         {
             _orderService
                 .Setup(o => o.Add(It.IsAny<List<int>>()))
                 .ReturnsAsync(default(Order));
 
-            Assert.IsFalse(await _createOrderHandler.Create(new List<int>()));
+            Assert.IsNull(await _createOrderHandler.Create(new List<int>()));
         }
 
         [Test]
-        public async Task ReturnTrue_When_Created()
+        public async Task ReturnOrder_When_Created()
         {
             _orderService
                 .Setup(o => o.Add(It.IsAny<List<int>>()))
                 .ReturnsAsync(new Order());
 
-            Assert.IsTrue(await _createOrderHandler.Create(new List<int>()));
+            Assert.IsNotNull(await _createOrderHandler.Create(new List<int>()));
         }
     }
 }

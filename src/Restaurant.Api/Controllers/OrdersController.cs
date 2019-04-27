@@ -21,12 +21,12 @@ namespace Restaurant.Api.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(typeof(void), (int)HttpStatusCode.NoContent)]
+        [ProducesResponseType(typeof(GetOrdersResponse), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(void), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> Create(List<int> productsId)
         {
-            var created = await _createOrderHandler.Create(productsId);
-            return created ? NoContent() : (IActionResult)BadRequest();
+            var newOrder = await _createOrderHandler.Create(productsId);
+            return newOrder == null ? BadRequest() : (IActionResult)Ok(newOrder);
         }
 
 

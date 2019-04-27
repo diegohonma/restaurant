@@ -28,26 +28,33 @@ namespace Restaurant.Tests.Presentation.Controllers
         [Test]
         public async Task Return_NoContent_When_Created()
         {
+            var expectedResponse = new GetOrdersResponse("orderId", "orderStatus");
+
             _createOrderHandler
                 .Setup(c => c.Create(It.IsAny<List<int>>()))
-                .ReturnsAsync(true);
+                .ReturnsAsync(expectedResponse);
 
             var response = await _ordersController.Create(new List<int>());
 
             Assert.Multiple(() =>
             {
-                var objectResult = (NoContentResult)response;
+                var objectResult = (OkObjectResult)response;
                 Assert.IsNotNull(objectResult);
-                Assert.AreEqual((int)HttpStatusCode.NoContent, objectResult.StatusCode);
+                Assert.AreEqual((int)HttpStatusCode.OK, objectResult.StatusCode);
+
+                var content = objectResult.Value as GetOrdersResponse;
+                Assert.IsNotNull(content);
+                Assert.AreEqual(expectedResponse.OrderId, content.OrderId);
+                Assert.AreEqual(expectedResponse.OrderStatus, content.OrderStatus);
             });
         }
 
         [Test]
-        public async Task Return_Ok_When_ProductsFound()
+        public async Task Return_BadRequest_When_NotCreated()
         {
             _createOrderHandler
                 .Setup(c => c.Create(It.IsAny<List<int>>()))
-                .ReturnsAsync(false);
+                .ReturnsAsync(default(GetOrdersResponse));
 
             var response = await _ordersController.Create(new List<int>());
 
