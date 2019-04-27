@@ -20,11 +20,11 @@ namespace Restaurant.Api.Controllers
 
         [HttpGet]
         [ProducesResponseType(typeof(void), (int)HttpStatusCode.NoContent)]
-        [ProducesResponseType(typeof(List<GetProductsViewModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(List<GetProductsResponse>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetAll()
         {
             var products = await _getProductsHandler.GetAll();
-            return products.Products.Count == 0 ? NoContent() : (IActionResult)Ok(products.Products);
+            return products.Count == 0 ? NoContent() : (IActionResult)Ok(products);
         }
     }
 }

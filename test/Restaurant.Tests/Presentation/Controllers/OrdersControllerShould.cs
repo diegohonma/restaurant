@@ -64,7 +64,7 @@ namespace Restaurant.Tests.Presentation.Controllers
         {
             _getOrderHandler
                 .Setup(g => g.GetOrderById(It.IsAny<string>()))
-                .Returns(new GetOrdersResponse(new List<GetOrdersViewModel>()));
+                .Returns(default(GetOrdersResponse));
 
             var response = _ordersController.GetById(string.Empty);
 
@@ -79,18 +79,18 @@ namespace Restaurant.Tests.Presentation.Controllers
         [Test]
         public void Return_Ok_When_ProductFound()
         {
-            var expectedOrder = new GetOrdersViewModel(Guid.NewGuid().ToString(), "status");
+            var expectedOrder = new GetOrdersResponse(Guid.NewGuid().ToString(), "status");
 
             _getOrderHandler
                 .Setup(g => g.GetOrderById(It.IsAny<string>()))
-                .Returns(new GetOrdersResponse(new List<GetOrdersViewModel> { expectedOrder }));
+                .Returns(expectedOrder);
 
             var response = _ordersController.GetById(string.Empty);
 
             Assert.Multiple(() =>
             {
                 var objectResult = (OkObjectResult)response;
-                var content = objectResult.Value as GetOrdersViewModel;
+                var content = objectResult.Value as GetOrdersResponse;
 
                 Assert.IsNotNull(objectResult);
                 Assert.AreEqual((int)HttpStatusCode.OK, objectResult.StatusCode);

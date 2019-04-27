@@ -25,7 +25,7 @@ namespace Restaurant.Tests.Application.Handlers.Products
         [Test]
         public async Task Return_AllProducts()
         {
-            var products = new List<Product>()
+            var expectedProducts = new List<Product>()
             {
                 new Product(1, "prod1", "10", ProductType.Burger),
                 new Product(2, "prod2", "20", ProductType.Drink)
@@ -33,15 +33,15 @@ namespace Restaurant.Tests.Application.Handlers.Products
 
             _productsRepository
                 .Setup(p => p.GetAll())
-                .ReturnsAsync(products);
+                .ReturnsAsync(expectedProducts);
 
-            var response = await _getProductsHandler.GetAll();
+            var products = await _getProductsHandler.GetAll();
 
             Assert.Multiple(() =>
             {
-                Assert.AreEqual(products.Count, response.Products.Count);
+                Assert.AreEqual(products.Count, products.Count);
 
-                foreach (var product in response.Products)
+                foreach (var product in products)
                 {
                     var expectedProduct = products.FirstOrDefault(p => p.Id == product.Id);
 

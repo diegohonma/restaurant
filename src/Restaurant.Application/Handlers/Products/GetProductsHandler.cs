@@ -1,5 +1,6 @@
 ﻿using Restaurant.Application.Responses;
 using Restaurant.Domain.Interfaces.Repositories;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,12 +15,10 @@ namespace Restaurant.Application.Handlers.Products
             _productsRepository = productsRepository;
         }
 
-        public async Task<GetProductsResponse> GetAll()
+        public async Task<List<GetProductsResponse>> GetAll()
         {
             var products = await _productsRepository.GetAll();
-
-            return new GetProductsResponse(
-                products.Select(p => new GetProductsViewModel(p.Id, p.Description, p.CookTime)).ToList());
+            return products.Select(p => new GetProductsResponse(p.Id, p.Description, p.CookTime)).ToList();
         }
     }
 }

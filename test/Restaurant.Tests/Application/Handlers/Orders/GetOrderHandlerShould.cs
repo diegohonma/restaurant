@@ -5,7 +5,6 @@ using Restaurant.CrossCutting;
 using Restaurant.Domain.Entities;
 using Restaurant.Domain.Interfaces.Repositories;
 using System;
-using System.Linq;
 
 namespace Restaurant.Tests.Application.Handlers.Orders
 {
@@ -22,13 +21,13 @@ namespace Restaurant.Tests.Application.Handlers.Orders
         }
 
         [Test]
-        public void Return_Empty_When_NotFound()
+        public void Return_Null_When_NotFound()
         {
             _orderRepository
                 .Setup(o => o.GetById(It.IsAny<Guid>()))
                 .Returns(default(Order));
 
-            Assert.IsEmpty(_getOrderHandler.GetOrderById(Guid.NewGuid().ToString()).Orders);
+            Assert.IsNull(_getOrderHandler.GetOrderById(Guid.NewGuid().ToString()));
         }
 
         [Test]
@@ -40,14 +39,10 @@ namespace Restaurant.Tests.Application.Handlers.Orders
                 .Setup(o => o.GetById(It.IsAny<Guid>()))
                 .Returns(expectedOrder);
 
-            var orders = _getOrderHandler.GetOrderById(expectedOrder.OrderId.ToString()).Orders;
+            var foundOrder = _getOrderHandler.GetOrderById(expectedOrder.OrderId.ToString());
 
             Assert.Multiple(() =>
             {
-                Assert.IsTrue(orders.Count == 1);
-
-                var foundOrder = orders.First();
-
                 Assert.AreEqual(expectedOrder.OrderId.ToString(), foundOrder.OrderId);
                 Assert.AreEqual(expectedOrder.OrderStatus.GetDescription(), foundOrder.OrderStatus);
             });

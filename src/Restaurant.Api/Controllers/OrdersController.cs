@@ -2,7 +2,6 @@
 using Restaurant.Application.Handlers.Orders;
 using Restaurant.Application.Responses;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -32,12 +31,12 @@ namespace Restaurant.Api.Controllers
 
 
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(GetOrdersViewModel), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(GetOrdersResponse), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(void), (int)HttpStatusCode.NotFound)]
         public IActionResult GetById(string id)
         {
             var found = _getOrderHandler.GetOrderById(id);
-            return found.Orders.Count == 0 ? NotFound() : (IActionResult)Ok(found.Orders.First());
+            return found == null ? NotFound() : (IActionResult)Ok(found);
         }
     }
 }

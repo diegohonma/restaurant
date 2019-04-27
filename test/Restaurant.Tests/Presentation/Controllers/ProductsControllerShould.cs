@@ -28,7 +28,7 @@ namespace Restaurant.Tests.Presentation.Controllers
         {
             _getProductsHandler
                 .Setup(g => g.GetAll())
-                .ReturnsAsync(new GetProductsResponse(new List<GetProductsViewModel>()));
+                .ReturnsAsync(new List<GetProductsResponse>());
 
             var response = await _productsController.GetAll();
 
@@ -43,18 +43,18 @@ namespace Restaurant.Tests.Presentation.Controllers
         [Test]
         public async Task Return_Ok_When_ProductsFound()
         {
-            var expectedProduct = new GetProductsViewModel(1, "product1", "10");
+            var expectedProduct = new GetProductsResponse(1, "product1", "10");
 
             _getProductsHandler
                 .Setup(g => g.GetAll())
-                .ReturnsAsync(new GetProductsResponse(new List<GetProductsViewModel> { expectedProduct }));
+                .ReturnsAsync(new List<GetProductsResponse> { expectedProduct });
 
             var response = await _productsController.GetAll();
 
             Assert.Multiple(() =>
             {
                 var result = (OkObjectResult)response;
-                var content = result.Value as List<GetProductsViewModel>;
+                var content = result.Value as List<GetProductsResponse>;
 
                 Assert.IsNotNull(content);
                 Assert.AreEqual((int)HttpStatusCode.OK, result.StatusCode);
