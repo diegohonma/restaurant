@@ -39,12 +39,18 @@ namespace Restaurant.Tests.Domain
                 .Setup(o => o.GetByStatus(It.IsAny<OrderStatus>()))
                 .Returns(new List<Order>());
 
-            Assert.IsNull(await _orderService.Add(new List<Product>
+            var response = await _orderService.Add(new List<Product>
             {
                 new Product(1, string.Empty, string.Empty, ProductType.None),
                 new Product(2, string.Empty, string.Empty, ProductType.None),
                 new Product(3, string.Empty, string.Empty, ProductType.None)
-            }));
+            });
+
+            Assert.Multiple(() =>
+            {
+                Assert.IsNull(response.Value);
+                Assert.AreEqual("Produto informado não pode ser encontrado.", response.Error);
+            });
         }
 
         [Test]
@@ -99,7 +105,7 @@ namespace Restaurant.Tests.Domain
             Assert.Multiple(() =>
             {
                 Assert.IsNotNull(order);
-                Assert.IsTrue(order.Products.Count(p => p.Type == ProductType.DrinkFree) == 1);
+                Assert.IsTrue(order.Value.Products.Count(p => p.Type == ProductType.DrinkFree) == 1);
             });
         }
 
@@ -123,7 +129,11 @@ namespace Restaurant.Tests.Domain
                 new Product(2, string.Empty, string.Empty, ProductType.None)
             });
 
-            Assert.IsNull(order);
+            Assert.Multiple(() =>
+            {
+                Assert.IsNull(order.Value);
+                Assert.AreEqual("Cozinha ocupada, tente novamente mais tarde.", order.Error);
+            });
         }
 
         [Test]

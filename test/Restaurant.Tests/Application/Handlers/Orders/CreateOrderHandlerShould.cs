@@ -24,11 +24,20 @@ namespace Restaurant.Tests.Application.Handlers.Orders
         [Test]
         public async Task ReturnNull_When_NotCreated()
         {
+            const string expectedError = "error";
+
             _orderService
                 .Setup(o => o.Add(It.IsAny<List<Product>>()))
-                .ReturnsAsync(default(Order));
+                .ReturnsAsync(new Entity<Order>(default(Order), expectedError));
 
-            Assert.IsNull(await _createOrderHandler.Create(new CreateOrderRequest(new List<CreateOrderProductsRequest>())));
+            var response =
+                await _createOrderHandler.Create(new CreateOrderRequest(new List<CreateOrderProductsRequest>()));
+
+            Assert.Multiple(() =>
+            {
+                Assert.IsNull(response.Value);
+                Assert.AreEqual(expectedError, response.Error);
+            });
         }
 
         [Test]
@@ -36,9 +45,16 @@ namespace Restaurant.Tests.Application.Handlers.Orders
         {
             _orderService
                 .Setup(o => o.Add(It.IsAny<List<Product>>()))
-                .ReturnsAsync(new Order());
+                .ReturnsAsync(new Entity<Order>(new Order(), string.Empty));
 
-            Assert.IsNotNull(await _createOrderHandler.Create(new CreateOrderRequest(new List<CreateOrderProductsRequest>())));
+            var response =
+                await _createOrderHandler.Create(new CreateOrderRequest(new List<CreateOrderProductsRequest>()));
+
+            Assert.Multiple(() =>
+            {
+                Assert.IsNotNull(response.Value);
+                Assert.IsEmpty(response.Error);
+            });
         }
     }
 }

@@ -22,11 +22,11 @@ namespace Restaurant.Api.Controllers
 
         [HttpPost]
         [ProducesResponseType(typeof(GetOrdersResponse), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(void), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(Response<GetOrdersResponse>), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> Create(CreateOrderRequest orderRequest)
         {
             var newOrder = await _createOrderHandler.Create(orderRequest);
-            return newOrder == null ? BadRequest() : (IActionResult)Ok(newOrder);
+            return newOrder.Value == null ? BadRequest(newOrder) : (IActionResult)Ok(newOrder.Value);
         }
 
 

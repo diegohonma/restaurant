@@ -29,7 +29,9 @@ namespace Restaurant.Tests.Presentation.Controllers
         [Test]
         public async Task Return_NoContent_When_Created()
         {
-            var expectedResponse = new GetOrdersResponse("orderId", "orderStatus");
+            var expectedResponse = new Response<GetOrdersResponse>(
+                new GetOrdersResponse("orderId", "orderStatus"),
+                string.Empty);
 
             _createOrderHandler
                 .Setup(c => c.Create(It.IsAny<CreateOrderRequest>()))
@@ -45,25 +47,32 @@ namespace Restaurant.Tests.Presentation.Controllers
 
                 var content = objectResult.Value as GetOrdersResponse;
                 Assert.IsNotNull(content);
-                Assert.AreEqual(expectedResponse.OrderId, content.OrderId);
-                Assert.AreEqual(expectedResponse.OrderStatus, content.OrderStatus);
+                Assert.AreEqual(expectedResponse.Value.OrderId, content.OrderId);
+                Assert.AreEqual(expectedResponse.Value.OrderStatus, content.OrderStatus);
             });
         }
 
         [Test]
         public async Task Return_BadRequest_When_NotCreated()
         {
+            const string expectedError = "error";
+
             _createOrderHandler
                 .Setup(c => c.Create(It.IsAny<CreateOrderRequest>()))
-                .ReturnsAsync(default(GetOrdersResponse));
+                .ReturnsAsync(new Response<GetOrdersResponse>(
+                    default(GetOrdersResponse), expectedError));
 
             var response = await _ordersController.Create(new CreateOrderRequest(new List<CreateOrderProductsRequest>()));
 
             Assert.Multiple(() =>
             {
-                var objectResult = (BadRequestResult)response;
+                var objectResult = (BadRequestObjectResult)response;
                 Assert.IsNotNull(objectResult);
                 Assert.AreEqual((int)HttpStatusCode.BadRequest, objectResult.StatusCode);
+
+                var content = objectResult.Value as Response<GetOrdersResponse>;
+                Assert.IsNotNull(content);
+                Assert.AreEqual(expectedError, content.Error);
             });
         }
 

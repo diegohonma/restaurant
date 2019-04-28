@@ -24,16 +24,16 @@ namespace Restaurant.Domain.Services
             _maxOrdersKitchen = maxOrdersKitchen;
         }
 
-        public async Task<Order> Add(List<Product> products)
+        public async Task<Entity<Order>> Add(List<Product> products)
         {
             if(_orderRepository.GetByStatus(OrderStatus.Started).Count >= _maxOrdersKitchen)
-                return default(Order);
+                return new Entity<Order>(default(Order), "Cozinha ocupada, tente novamente mais tarde.");
 
             var newOrder = new Order();
             var productsFound = await Task.WhenAll(products.Select(p => _productsRepository.GetById(p.Id)));
 
             if (productsFound.Count(p => p != null) != products.Count)
-                return default(Order);
+                return new Entity<Order>(default(Order), "Produto informado não pode ser encontrado.");
 
             productsFound.ToList()
                 .ForEach(p => newOrder.AddNewProduct(p.Id, p.Description, p.CookTime, p.Type));
@@ -46,7 +46,7 @@ namespace Restaurant.Domain.Services
 
             _orderRepository.Add(newOrder);
 
-            return newOrder;
+            return new Entity<Order>(newOrder, string.Empty);
         }
 
         public void FinishOrders()

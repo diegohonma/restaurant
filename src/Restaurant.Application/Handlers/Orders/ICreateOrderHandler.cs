@@ -6,6 +6,6 @@ namespace Restaurant.Application.Handlers.Orders
 {
     public interface ICreateOrderHandler
     {
-        Task<GetOrdersResponse> Create(CreateOrderRequest order);
+        Task<Response<GetOrdersResponse>> Create(CreateOrderRequest order);
     }
 }

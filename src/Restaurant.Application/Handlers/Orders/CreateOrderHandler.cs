@@ -18,14 +18,16 @@ namespace Restaurant.Application.Handlers.Orders
             _orderService = orderService;
         }
 
-        public async Task<GetOrdersResponse> Create(CreateOrderRequest order)
+        public async Task<Response<GetOrdersResponse>> Create(CreateOrderRequest order)
         {
             var newOrder = await _orderService.Add(
                 order.Products.Select(p => new Product(p.Id, string.Empty, string.Empty, ProductType.None)).ToList());
 
-            return newOrder == null
-                ? default(GetOrdersResponse)
-                : new GetOrdersResponse(newOrder.OrderId.ToString(), newOrder.OrderStatus.GetDescription());
+            return newOrder.Value == null
+                ? new Response<GetOrdersResponse>(
+                    default(GetOrdersResponse), newOrder.Error)
+                : new Response<GetOrdersResponse>(
+                    new GetOrdersResponse(newOrder.Value.OrderId.ToString(), newOrder.Value.OrderStatus.GetDescription()), string.Empty);
         }
     }
 }
