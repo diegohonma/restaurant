@@ -5,6 +5,8 @@ using Restaurant.CrossCutting;
 using Restaurant.Domain.Entities;
 using Restaurant.Domain.Interfaces.Repositories;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Restaurant.Tests.Application.Handlers.Orders
 {
@@ -45,6 +47,28 @@ namespace Restaurant.Tests.Application.Handlers.Orders
             {
                 Assert.AreEqual(expectedOrder.OrderId.ToString(), foundOrder.OrderId);
                 Assert.AreEqual(expectedOrder.OrderStatus.GetDescription(), foundOrder.OrderStatus);
+            });
+        }
+
+        [Test]
+        public void Return_AllOrders_When_Found()
+        {
+            var expectedOrder = new List<Order> { new Order() };
+
+            _orderRepository
+                .Setup(o => o.GetAll())
+                .Returns(expectedOrder);
+
+            var foundOrders = _getOrderHandler.GetAll();
+
+            Assert.Multiple(() =>
+            {
+                Assert.AreEqual(expectedOrder.Count, foundOrders.Count);
+
+                var order = foundOrders.First();
+                Assert.IsNotNull(order);
+                Assert.AreEqual(expectedOrder.First().OrderId.ToString(), order.OrderId);
+                Assert.AreEqual(expectedOrder.First().OrderStatus.GetDescription(), order.OrderStatus);
             });
         }
     }

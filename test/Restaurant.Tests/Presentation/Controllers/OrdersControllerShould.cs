@@ -7,6 +7,7 @@ using Restaurant.Application.Requests;
 using Restaurant.Application.Responses;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -114,6 +115,54 @@ namespace Restaurant.Tests.Presentation.Controllers
                 Assert.IsNotNull(content);
                 Assert.AreEqual(expectedOrder.OrderId, content.OrderId);
                 Assert.AreEqual(expectedOrder.OrderStatus, content.OrderStatus);
+            });
+        }
+
+        [Test]
+        public void Return_Ok_When_ProductsFound()
+        {
+            var expectedOrders = new List<GetOrdersResponse>
+            {
+                new GetOrdersResponse("1", "status")
+            };
+
+            _getOrderHandler
+                .Setup(g => g.GetAll())
+                .Returns(expectedOrders);
+
+            var response = _ordersController.GetAll();
+
+            Assert.Multiple(() =>
+            {
+                var objectResult = (OkObjectResult)response;
+                var content = objectResult.Value as List<GetOrdersResponse>;
+
+                Assert.IsNotNull(objectResult);
+                Assert.AreEqual((int)HttpStatusCode.OK, objectResult.StatusCode);
+                Assert.IsNotNull(content);
+
+                var order = content.First();
+                Assert.IsNotNull(order);
+                Assert.AreEqual(expectedOrders.First().OrderId, order.OrderId);
+                Assert.AreEqual(expectedOrders.First().OrderStatus, order.OrderStatus);
+            });
+        }
+
+
+        [Test]
+        public void Return_NoContent_When_ProductsNotFound()
+        {
+            _getOrderHandler
+                .Setup(g => g.GetAll())
+                .Returns(new List<GetOrdersResponse>());
+
+            var response = _ordersController.GetAll();
+
+            Assert.Multiple(() =>
+            {
+                var objectResult = (NoContentResult)response;
+                Assert.IsNotNull(objectResult);
+                Assert.AreEqual((int)HttpStatusCode.NoContent, objectResult.StatusCode);
             });
         }
     }

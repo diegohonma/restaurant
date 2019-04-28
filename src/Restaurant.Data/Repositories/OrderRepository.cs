@@ -24,5 +24,8 @@ namespace Restaurant.Data.Repositories
 
         public List<Order> GetByStatus(OrderStatus orderStatus)
             => _listOrder.Where(o => o.OrderStatus == orderStatus).ToList();
+
+        public List<Order> GetAll()
+            => _listOrder;
     }
 }

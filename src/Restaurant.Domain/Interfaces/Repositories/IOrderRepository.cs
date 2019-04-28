@@ -12,5 +12,7 @@ namespace Restaurant.Domain.Interfaces.Repositories
         Order GetById(Guid id);
 
         List<Order> GetByStatus(OrderStatus orderStatus);
+
+        List<Order> GetAll();
     }
 }

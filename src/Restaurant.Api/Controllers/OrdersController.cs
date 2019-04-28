@@ -2,6 +2,7 @@
 using Restaurant.Application.Handlers.Orders;
 using Restaurant.Application.Requests;
 using Restaurant.Application.Responses;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -37,6 +38,16 @@ namespace Restaurant.Api.Controllers
         {
             var found = _getOrderHandler.GetOrderById(id);
             return found == null ? NotFound() : (IActionResult)Ok(found);
+        }
+
+
+        [HttpGet]
+        [ProducesResponseType(typeof(List<GetOrdersResponse>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(void), (int)HttpStatusCode.NoContent)]
+        public IActionResult GetAll()
+        {
+            var orders = _getOrderHandler.GetAll();
+            return orders.Count > 0 ? Ok(orders) : (IActionResult)NoContent();
         }
     }
 }
