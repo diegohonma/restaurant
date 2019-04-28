@@ -2,6 +2,7 @@
 using Restaurant.Domain.Enums;
 using Restaurant.Domain.Interfaces.Repositories;
 using Restaurant.Domain.Interfaces.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -46,6 +47,17 @@ namespace Restaurant.Domain.Services
             _orderRepository.Add(newOrder);
 
             return newOrder;
+        }
+
+        public void FinishOrders()
+        {
+            var orders = _orderRepository.GetByStatus(OrderStatus.Started);
+
+            orders.ForEach(o =>
+            {
+                if (DateTime.Now > o.OrderDate.AddSeconds(o.Products.Sum(p => Convert.ToInt32(p.CookTime))))
+                    o.SetOrderStatus(OrderStatus.Finished);
+            });
         }
     }
 }

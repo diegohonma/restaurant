@@ -6,6 +6,7 @@ using Restaurant.Domain.Interfaces.Repositories;
 using Restaurant.Domain.Services;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Restaurant.Tests.Domain
@@ -123,6 +124,32 @@ namespace Restaurant.Tests.Domain
             });
 
             Assert.IsNull(order);
+        }
+
+        [Test]
+        public void FinishOrders_When_CookTimePassed()
+        {
+            const int cookTime = 3;
+
+            var order = new Order();
+            order.AddNewProduct(1, "description", cookTime.ToString(), ProductType.Burger);
+
+            _orderRepository
+                .Setup(o => o.GetByStatus(It.Is<OrderStatus>(os => os == OrderStatus.Started)))
+                .Returns(new List<Order>
+                {
+                    order
+                });
+
+            Assert.Multiple(() =>
+            {
+                Assert.IsTrue(order.OrderStatus == OrderStatus.Started);
+                Thread.Sleep((cookTime + 1) * 1000);
+                _orderService.FinishOrders();
+
+                Assert.IsTrue(order.OrderStatus == OrderStatus.Finished);
+            });
+            
         }
     }
 }

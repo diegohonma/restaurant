@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Restaurant.Application;
 using Restaurant.Application.Handlers.Orders;
 using Restaurant.Application.Handlers.Products;
 using Restaurant.Data.Repositories;
@@ -18,8 +19,9 @@ namespace Restaurant.Ioc
         public static void RegisterDependencies(this IServiceCollection services, IConfiguration configuration)
         {
             RegisterApplicationHandlers(services);
-            RegisterRepositories(services, configuration);
+            RegisterRepositories(services);
             RegisterServices(services, configuration);
+            RegisterHostingServices(services);
         }
 
         private static void RegisterApplicationHandlers(IServiceCollection services)
@@ -29,7 +31,7 @@ namespace Restaurant.Ioc
             services.AddScoped<IGetOrderHandler, GetOrderHandler>();
         }
 
-        private static void RegisterRepositories(IServiceCollection services, IConfiguration configuration)
+        private static void RegisterRepositories(IServiceCollection services)
         {
             services.AddScoped<IProductsRepository>(
                 provider => new ProductsRepository(
@@ -45,6 +47,11 @@ namespace Restaurant.Ioc
                 new OrderService(
                     provider.GetRequiredService<IProductsRepository>(), provider.GetRequiredService<IOrderRepository>(),
                     configuration.GetValue<int>("MaxOrdersKitchen")));
+        }
+
+        private static void RegisterHostingServices(IServiceCollection services)
+        {
+            services.AddHostedService<FinishOrdersBackgroundService>();
         }
     }
 }
