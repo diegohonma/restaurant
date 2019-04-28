@@ -23,18 +23,18 @@ namespace Restaurant.Domain.Services
             _maxOrdersKitchen = maxOrdersKitchen;
         }
 
-        public async Task<Order> Add(List<int> productsId)
+        public async Task<Order> Add(List<Product> products)
         {
             if(_orderRepository.GetByStatus(OrderStatus.Started).Count >= _maxOrdersKitchen)
                 return default(Order);
 
             var newOrder = new Order();
-            var products = await Task.WhenAll(productsId.Select(p => _productsRepository.GetById(p)));
+            var productsFound = await Task.WhenAll(products.Select(p => _productsRepository.GetById(p.Id)));
 
-            if (products.Count(p => p != null) != productsId.Count)
+            if (productsFound.Count(p => p != null) != products.Count)
                 return default(Order);
 
-            products.ToList()
+            productsFound.ToList()
                 .ForEach(p => newOrder.AddNewProduct(p.Id, p.Description, p.CookTime, p.Type));
 
             if (newOrder.Products.Count(p => p.Type == ProductType.Burger) >= 2)

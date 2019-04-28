@@ -6,6 +6,6 @@ namespace Restaurant.Domain.Interfaces.Services
 {
     public interface IOrderService
     {
-        Task<Order> Add(List<int> productsId);
+        Task<Order> Add(List<Product> products);
     }
 }

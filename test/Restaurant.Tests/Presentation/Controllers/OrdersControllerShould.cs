@@ -3,6 +3,7 @@ using Moq;
 using NUnit.Framework;
 using Restaurant.Api.Controllers;
 using Restaurant.Application.Handlers.Orders;
+using Restaurant.Application.Requests;
 using Restaurant.Application.Responses;
 using System;
 using System.Collections.Generic;
@@ -31,10 +32,10 @@ namespace Restaurant.Tests.Presentation.Controllers
             var expectedResponse = new GetOrdersResponse("orderId", "orderStatus");
 
             _createOrderHandler
-                .Setup(c => c.Create(It.IsAny<List<int>>()))
+                .Setup(c => c.Create(It.IsAny<CreateOrderRequest>()))
                 .ReturnsAsync(expectedResponse);
 
-            var response = await _ordersController.Create(new List<int>());
+            var response = await _ordersController.Create(new CreateOrderRequest(new List<CreateOrderProductsRequest>()));
 
             Assert.Multiple(() =>
             {
@@ -53,10 +54,10 @@ namespace Restaurant.Tests.Presentation.Controllers
         public async Task Return_BadRequest_When_NotCreated()
         {
             _createOrderHandler
-                .Setup(c => c.Create(It.IsAny<List<int>>()))
+                .Setup(c => c.Create(It.IsAny<CreateOrderRequest>()))
                 .ReturnsAsync(default(GetOrdersResponse));
 
-            var response = await _ordersController.Create(new List<int>());
+            var response = await _ordersController.Create(new CreateOrderRequest(new List<CreateOrderProductsRequest>()));
 
             Assert.Multiple(() =>
             {

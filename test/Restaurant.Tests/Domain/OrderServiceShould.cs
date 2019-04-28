@@ -38,7 +38,12 @@ namespace Restaurant.Tests.Domain
                 .Setup(o => o.GetByStatus(It.IsAny<OrderStatus>()))
                 .Returns(new List<Order>());
 
-            Assert.IsNull(await _orderService.Add(new List<int> { 1, 2, 3 }));
+            Assert.IsNull(await _orderService.Add(new List<Product>
+            {
+                new Product(1, string.Empty, string.Empty, ProductType.None),
+                new Product(2, string.Empty, string.Empty, ProductType.None),
+                new Product(3, string.Empty, string.Empty, ProductType.None)
+            }));
         }
 
         [Test]
@@ -59,7 +64,11 @@ namespace Restaurant.Tests.Domain
                 .Setup(o => o.GetByStatus(It.IsAny<OrderStatus>()))
                 .Returns(new List<Order>());
 
-            Assert.IsNotNull(await _orderService.Add(new List<int> { 1, 2 }));
+            Assert.IsNotNull(await _orderService.Add(new List<Product>
+            {
+                new Product(1, string.Empty, string.Empty, ProductType.None),
+                new Product(2, string.Empty, string.Empty, ProductType.None)
+            }));
         }
 
         [Test]
@@ -80,7 +89,11 @@ namespace Restaurant.Tests.Domain
                 .Setup(o => o.GetByStatus(It.IsAny<OrderStatus>()))
                 .Returns(new List<Order>());
 
-            var order = await _orderService.Add(new List<int> { 1, 2 });
+            var order = await _orderService.Add(new List<Product>
+            {
+                new Product(1, string.Empty, string.Empty, ProductType.None),
+                new Product(2, string.Empty, string.Empty, ProductType.None)
+            });
 
             Assert.Multiple(() =>
             {
@@ -103,7 +116,11 @@ namespace Restaurant.Tests.Domain
                     new Order(), new Order(), new Order(), new Order()
                 });
 
-            var order = await _orderService.Add(new List<int> { 1, 2 });
+            var order = await _orderService.Add(new List<Product>
+            {
+                new Product(1, string.Empty, string.Empty, ProductType.None),
+                new Product(2, string.Empty, string.Empty, ProductType.None)
+            });
 
             Assert.IsNull(order);
         }

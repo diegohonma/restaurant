@@ -1,7 +1,10 @@
-﻿using Restaurant.Application.Responses;
+﻿using Restaurant.Application.Requests;
+using Restaurant.Application.Responses;
 using Restaurant.CrossCutting;
+using Restaurant.Domain.Entities;
+using Restaurant.Domain.Enums;
 using Restaurant.Domain.Interfaces.Services;
-using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Restaurant.Application.Handlers.Orders
@@ -15,13 +18,14 @@ namespace Restaurant.Application.Handlers.Orders
             _orderService = orderService;
         }
 
-        public async Task<GetOrdersResponse> Create(List<int> productsId)
+        public async Task<GetOrdersResponse> Create(CreateOrderRequest order)
         {
-            var order = await _orderService.Add(productsId);
+            var newOrder = await _orderService.Add(
+                order.Products.Select(p => new Product(p.Id, string.Empty, string.Empty, ProductType.None)).ToList());
 
-            return order == null
+            return newOrder == null
                 ? default(GetOrdersResponse)
-                : new GetOrdersResponse(order.OrderId.ToString(), order.OrderStatus.GetDescription());
+                : new GetOrdersResponse(newOrder.OrderId.ToString(), newOrder.OrderStatus.GetDescription());
         }
     }
 }
