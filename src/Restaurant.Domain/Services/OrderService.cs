@@ -12,15 +12,22 @@ namespace Restaurant.Domain.Services
     {
         private readonly IProductsRepository _productsRepository;
         private readonly IOrderRepository _orderRepository;
+        private readonly int _maxOrdersKitchen;
 
-        public OrderService(IProductsRepository productsRepository, IOrderRepository orderRepository)
+        public OrderService(
+            IProductsRepository productsRepository, IOrderRepository orderRepository,
+            int maxOrdersKitchen)
         {
             _productsRepository = productsRepository;
             _orderRepository = orderRepository;
+            _maxOrdersKitchen = maxOrdersKitchen;
         }
 
         public async Task<Order> Add(List<int> productsId)
         {
+            if(_orderRepository.GetByStatus(OrderStatus.Started).Count >= _maxOrdersKitchen)
+                return default(Order);
+
             var newOrder = new Order();
             var products = await Task.WhenAll(productsId.Select(p => _productsRepository.GetById(p)));
 

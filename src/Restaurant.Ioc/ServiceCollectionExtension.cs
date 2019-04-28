@@ -19,7 +19,7 @@ namespace Restaurant.Ioc
         {
             RegisterApplicationHandlers(services);
             RegisterRepositories(services, configuration);
-            RegisterServices(services);
+            RegisterServices(services, configuration);
         }
 
         private static void RegisterApplicationHandlers(IServiceCollection services)
@@ -39,9 +39,12 @@ namespace Restaurant.Ioc
             services.AddSingleton(new List<Order>());
         }
 
-        private static void RegisterServices(IServiceCollection services)
+        private static void RegisterServices(IServiceCollection services, IConfiguration configuration)
         {
-            services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IOrderService>(provider => 
+                new OrderService(
+                    provider.GetRequiredService<IProductsRepository>(), provider.GetRequiredService<IOrderRepository>(),
+                    configuration.GetValue<int>("MaxOrdersKitchen")));
         }
     }
 }

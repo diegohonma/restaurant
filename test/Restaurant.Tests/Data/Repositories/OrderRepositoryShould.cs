@@ -27,7 +27,7 @@ namespace Restaurant.Tests.Data.Repositories
         }
 
         [Test]
-        public void ReturnOrder_When_Found()
+        public void ReturnOrder_When_FoundById()
         {
             var order = _orders.First();
             var foundOrder = _orderRepository.GetById(order.OrderId);
@@ -44,6 +44,15 @@ namespace Restaurant.Tests.Data.Repositories
         public void ReturnNull_When_NotFound()
         {
             Assert.IsNull(_orderRepository.GetById(Guid.NewGuid()));
+        }
+
+        [Test]
+        public void ReturnOrder_When_FoundByStatus()
+        {
+            var order = _orders.First();
+            var foundOrders = _orderRepository.GetByStatus(order.OrderStatus);
+
+            Assert.IsNotEmpty(foundOrders);
         }
     }
 }

@@ -24,7 +24,7 @@ namespace Restaurant.Tests.Domain
             _orderRepository = new Mock<IOrderRepository>();
 
             _orderService = new OrderService(
-                _productsRepository.Object, _orderRepository.Object);
+                _productsRepository.Object, _orderRepository.Object, 4);
         }
 
         [Test]
@@ -33,6 +33,10 @@ namespace Restaurant.Tests.Domain
             _productsRepository
                 .Setup(p => p.GetById(It.Is<int>(id => id != 3)))
                 .ReturnsAsync(new Product(2, "", "", ProductType.Burger));
+
+            _orderRepository
+                .Setup(o => o.GetByStatus(It.IsAny<OrderStatus>()))
+                .Returns(new List<Order>());
 
             Assert.IsNull(await _orderService.Add(new List<int> { 1, 2, 3 }));
         }
@@ -51,6 +55,10 @@ namespace Restaurant.Tests.Domain
             _orderRepository
                 .Setup(o => o.Add(It.IsAny<Order>()));
 
+            _orderRepository
+                .Setup(o => o.GetByStatus(It.IsAny<OrderStatus>()))
+                .Returns(new List<Order>());
+
             Assert.IsNotNull(await _orderService.Add(new List<int> { 1, 2 }));
         }
 
@@ -68,6 +76,10 @@ namespace Restaurant.Tests.Domain
             _orderRepository
                 .Setup(o => o.Add(It.IsAny<Order>()));
 
+            _orderRepository
+                .Setup(o => o.GetByStatus(It.IsAny<OrderStatus>()))
+                .Returns(new List<Order>());
+
             var order = await _orderService.Add(new List<int> { 1, 2 });
 
             Assert.Multiple(() =>
@@ -75,6 +87,25 @@ namespace Restaurant.Tests.Domain
                 Assert.IsNotNull(order);
                 Assert.IsTrue(order.Products.Count(p => p.Type == ProductType.DrinkFree) == 1);
             });
+        }
+
+        [Test]
+        public async Task NotAllowOrder_When_KitchenHasMaximumOrders()
+        {
+            _productsRepository
+                .Setup(p => p.GetById(It.IsAny<int>()))
+                .ReturnsAsync(new Product(2, "", "", ProductType.Burger));
+
+            _orderRepository
+                .Setup(o => o.GetByStatus(It.IsAny<OrderStatus>()))
+                .Returns(new List<Order>
+                {
+                    new Order(), new Order(), new Order(), new Order()
+                });
+
+            var order = await _orderService.Add(new List<int> { 1, 2 });
+
+            Assert.IsNull(order);
         }
     }
 }
