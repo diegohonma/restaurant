@@ -8,11 +8,11 @@ namespace Restaurant.Domain.Entities
 
         public string Description { get; }
 
-        public string CookTime { get; }
+        public int CookTime { get; }
 
         public ProductType Type { get; }
 
-        public Product(int id, string description, string cookTime, ProductType type)
+        public Product(int id, string description, int cookTime, ProductType type)
         {
             Id = id;
             Description = description;

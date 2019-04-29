@@ -27,8 +27,8 @@ namespace Restaurant.Tests.Application.Handlers.Products
         {
             var expectedProducts = new List<Product>()
             {
-                new Product(1, "prod1", "10", ProductType.Burger),
-                new Product(2, "prod2", "20", ProductType.Drink)
+                new Product(1, "prod1", 10, ProductType.Burger),
+                new Product(2, "prod2", 20, ProductType.Drink)
             };
 
             _productsRepository

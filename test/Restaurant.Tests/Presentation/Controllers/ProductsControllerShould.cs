@@ -43,7 +43,7 @@ namespace Restaurant.Tests.Presentation.Controllers
         [Test]
         public async Task Return_Ok_When_ProductsFound()
         {
-            var expectedProduct = new GetProductsResponse(1, "product1", "10");
+            var expectedProduct = new GetProductsResponse(1, "product1", 10);
 
             _getProductsHandler
                 .Setup(g => g.GetAll())

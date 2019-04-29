@@ -21,7 +21,7 @@ namespace Restaurant.Application.Handlers.Orders
         public async Task<Response<GetOrdersResponse>> Create(CreateOrderRequest order)
         {
             var newOrder = await _orderService.Add(
-                order.Products.Select(p => new Product(p.Id, string.Empty, string.Empty, ProductType.None)).ToList());
+                order.Products.Select(p => new Product(p.Id, string.Empty, 0, ProductType.None)).ToList());
 
             return newOrder.Value == null
                 ? new Response<GetOrdersResponse>(

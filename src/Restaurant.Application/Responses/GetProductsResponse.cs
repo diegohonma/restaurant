@@ -6,9 +6,9 @@
 
         public string Description { get; }
 
-        public string CookTime { get; }
+        public int CookTime { get; }
 
-        public GetProductsResponse(int id, string description, string cookTime)
+        public GetProductsResponse(int id, string description, int cookTime)
         {
             Id = id;
             Description = description;

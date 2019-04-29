@@ -28,7 +28,7 @@ namespace Restaurant.Domain.Entities
             OrderDate = DateTime.Now;
         }
 
-        public void AddNewProduct(int id, string description, string cookTime, ProductType type)
+        public void AddNewProduct(int id, string description, int cookTime, ProductType type)
             =>_products.Add(new Product(id, description, cookTime, type));
 
         public void SetOrderStatus(OrderStatus orderStatus)

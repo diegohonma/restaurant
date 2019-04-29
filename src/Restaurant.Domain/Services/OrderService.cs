@@ -55,7 +55,7 @@ namespace Restaurant.Domain.Services
 
             orders.ForEach(o =>
             {
-                if (DateTime.Now > o.OrderDate.AddSeconds(o.Products.Sum(p => Convert.ToInt32(p.CookTime))))
+                if (DateTime.Now > o.OrderDate.AddSeconds(o.Products.Sum(p => p.CookTime)))
                     o.SetOrderStatus(OrderStatus.Finished);
             });
         }

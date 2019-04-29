@@ -33,7 +33,7 @@ namespace Restaurant.Tests.Domain
         {
             _productsRepository
                 .Setup(p => p.GetById(It.Is<int>(id => id != 3)))
-                .ReturnsAsync(new Product(2, "", "", ProductType.Burger));
+                .ReturnsAsync(new Product(2, "", 10, ProductType.Burger));
 
             _orderRepository
                 .Setup(o => o.GetByStatus(It.IsAny<OrderStatus>()))
@@ -41,9 +41,9 @@ namespace Restaurant.Tests.Domain
 
             var response = await _orderService.Add(new List<Product>
             {
-                new Product(1, string.Empty, string.Empty, ProductType.None),
-                new Product(2, string.Empty, string.Empty, ProductType.None),
-                new Product(3, string.Empty, string.Empty, ProductType.None)
+                new Product(1, string.Empty, 0, ProductType.None),
+                new Product(2, string.Empty, 0, ProductType.None),
+                new Product(3, string.Empty, 0, ProductType.None)
             });
 
             Assert.Multiple(() =>
@@ -58,11 +58,11 @@ namespace Restaurant.Tests.Domain
         {
             _productsRepository
                 .Setup(p => p.GetById(It.Is<int>(i => i == 1)))
-                .ReturnsAsync(new Product(1, "", "", ProductType.Burger));
+                .ReturnsAsync(new Product(1, "", 10, ProductType.Burger));
 
             _productsRepository
                 .Setup(p => p.GetById(It.Is<int>(i => i == 2)))
-                .ReturnsAsync(new Product(2, "", "", ProductType.Others));
+                .ReturnsAsync(new Product(2, "", 10, ProductType.Others));
 
             _orderRepository
                 .Setup(o => o.Add(It.IsAny<Order>()));
@@ -73,8 +73,8 @@ namespace Restaurant.Tests.Domain
 
             Assert.IsNotNull(await _orderService.Add(new List<Product>
             {
-                new Product(1, string.Empty, string.Empty, ProductType.None),
-                new Product(2, string.Empty, string.Empty, ProductType.None)
+                new Product(1, string.Empty, 0, ProductType.None),
+                new Product(2, string.Empty, 0, ProductType.None)
             }));
         }
 
@@ -83,11 +83,11 @@ namespace Restaurant.Tests.Domain
         {
             _productsRepository
                 .Setup(p => p.GetById(It.IsAny<int>()))
-                .ReturnsAsync(new Product(2, "", "", ProductType.Burger));
+                .ReturnsAsync(new Product(2, "", 0, ProductType.Burger));
 
             _productsRepository
                 .Setup(p => p.GetByType(It.IsAny<ProductType>()))
-                .ReturnsAsync(new List<Product> { new Product(2, "", "", ProductType.DrinkFree) });
+                .ReturnsAsync(new List<Product> { new Product(2, "", 0, ProductType.DrinkFree) });
 
             _orderRepository
                 .Setup(o => o.Add(It.IsAny<Order>()));
@@ -98,8 +98,8 @@ namespace Restaurant.Tests.Domain
 
             var order = await _orderService.Add(new List<Product>
             {
-                new Product(1, string.Empty, string.Empty, ProductType.None),
-                new Product(2, string.Empty, string.Empty, ProductType.None)
+                new Product(1, string.Empty, 0, ProductType.None),
+                new Product(2, string.Empty, 0, ProductType.None)
             });
 
             Assert.Multiple(() =>
@@ -114,7 +114,7 @@ namespace Restaurant.Tests.Domain
         {
             _productsRepository
                 .Setup(p => p.GetById(It.IsAny<int>()))
-                .ReturnsAsync(new Product(2, "", "", ProductType.Burger));
+                .ReturnsAsync(new Product(2, "", 0, ProductType.Burger));
 
             _orderRepository
                 .Setup(o => o.GetByStatus(It.IsAny<OrderStatus>()))
@@ -125,8 +125,8 @@ namespace Restaurant.Tests.Domain
 
             var order = await _orderService.Add(new List<Product>
             {
-                new Product(1, string.Empty, string.Empty, ProductType.None),
-                new Product(2, string.Empty, string.Empty, ProductType.None)
+                new Product(1, string.Empty, 0, ProductType.None),
+                new Product(2, string.Empty, 0, ProductType.None)
             });
 
             Assert.Multiple(() =>
@@ -142,7 +142,7 @@ namespace Restaurant.Tests.Domain
             const int cookTime = 3;
 
             var order = new Order();
-            order.AddNewProduct(1, "description", cookTime.ToString(), ProductType.Burger);
+            order.AddNewProduct(1, "description", cookTime, ProductType.Burger);
 
             _orderRepository
                 .Setup(o => o.GetByStatus(It.Is<OrderStatus>(os => os == OrderStatus.Started)))
